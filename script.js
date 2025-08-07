@@ -105,37 +105,84 @@ const navbar = document.getElementById('navbar');
 const servicesGrid = document.getElementById('services-grid');
 const contactForm = document.getElementById('contact-form');
 const bookingForm = document.getElementById('booking-form');
+const backToTopBtn = document.getElementById('back-to-top');
 
-// Mobile menu toggle
+// Enhanced Mobile Menu with Smooth Animations
 mobileMenu.addEventListener('click', () => {
     mobileMenu.classList.toggle('active');
     navMenu.classList.toggle('active');
+    
+    // Update aria-expanded attribute
+    const isExpanded = navMenu.classList.contains('active');
+    mobileMenu.setAttribute('aria-expanded', isExpanded);
+    
+    // Add body scroll lock when menu is open
+    if (navMenu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
 });
 
-// Close mobile menu when clicking on a link
+// Close mobile menu when clicking on a link with smooth transition
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-        navMenu.classList.remove('active');
+        if (navMenu.classList.contains('active')) {
+            mobileMenu.classList.remove('active');
+            navMenu.classList.remove('active');
+            mobileMenu.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
     });
 });
 
-// Navbar scroll effect
+// Enhanced Navbar Scroll Effect with Parallax
+let lastScrollY = window.scrollY;
 window.addEventListener('scroll', () => {
-    if (window.scrollY > 100) {
+    const currentScrollY = window.scrollY;
+    
+    // Add scrolled class for background effect
+    if (currentScrollY > 100) {
         navbar.classList.add('scrolled');
     } else {
         navbar.classList.remove('scrolled');
     }
+    
+    // Hide/show navbar on scroll (optional)
+    if (currentScrollY > lastScrollY && currentScrollY > 200) {
+        navbar.style.transform = 'translateY(-100%)';
+    } else {
+        navbar.style.transform = 'translateY(0)';
+    }
+    
+    // Back to top button functionality
+    if (currentScrollY > 500) {
+        backToTopBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+    }
+    
+    lastScrollY = currentScrollY;
 });
 
-// Populate services grid
+// Back to top button functionality
+backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// Enhanced Services Grid with Staggered Animations
 function populateServices() {
     servicesGrid.innerHTML = '';
     
-    services.forEach(service => {
+    services.forEach((service, index) => {
         const serviceCard = document.createElement('div');
-        serviceCard.className = 'service-card fade-in-up';
+        serviceCard.className = 'service-card';
+        serviceCard.style.opacity = '0';
+        serviceCard.style.transform = 'translateY(30px)';
+        
         serviceCard.innerHTML = `
             <div class="service-header">
                 <div class="service-icon">
@@ -148,35 +195,62 @@ function populateServices() {
                 ${service.features.map(feature => `<li>${feature}</li>`).join('')}
             </ul>
             <div class="service-price">${service.price}</div>
-            <button class="btn btn-primary" onclick="bookService('${service.title}')">Book Service</button>
+            <button class="btn btn-primary" onclick="bookService('${service.title}')">
+                <i class="fas fa-calendar-plus"></i>
+                Book Service
+            </button>
         `;
+        
         servicesGrid.appendChild(serviceCard);
+        
+        // Staggered animation
+        setTimeout(() => {
+            serviceCard.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            serviceCard.style.opacity = '1';
+            serviceCard.style.transform = 'translateY(0)';
+        }, index * 100);
     });
 }
 
-// Book service function
+// Enhanced Book Service Function with Smooth Scrolling and Form Pre-fill
 function bookService(serviceName) {
-    // Scroll to booking section
-    document.getElementById('booking').scrollIntoView({
-        behavior: 'smooth'
+    // Smooth scroll to booking section
+    const bookingSection = document.getElementById('booking');
+    bookingSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
     });
     
-    // Pre-fill service in booking form
-    const serviceSelect = document.querySelector('#booking-form select[name="service"]');
-    if (serviceSelect) {
-        // Try to match the service name or set to "other"
-        const option = Array.from(serviceSelect.options).find(opt => 
-            serviceName.toLowerCase().includes(opt.value.toLowerCase())
-        );
-        if (option) {
-            serviceSelect.value = option.value;
-        } else {
-            serviceSelect.value = 'other';
+    // Add a small delay to ensure smooth scroll completes
+    setTimeout(() => {
+        // Pre-fill service in booking form
+        const serviceSelect = document.querySelector('#booking-form select[name="service"]');
+        if (serviceSelect) {
+            // Try to match the service name or set to "other"
+            const option = Array.from(serviceSelect.options).find(opt => 
+                serviceName.toLowerCase().includes(opt.value.toLowerCase())
+            );
+            if (option) {
+                serviceSelect.value = option.value;
+                // Add visual feedback
+                serviceSelect.style.borderColor = '#10b981';
+                setTimeout(() => {
+                    serviceSelect.style.borderColor = '';
+                }, 2000);
+            } else {
+                serviceSelect.value = 'other';
+            }
         }
-    }
+        
+        // Add focus to the form for better UX
+        const firstInput = bookingForm.querySelector('input[name="name"]');
+        if (firstInput) {
+            firstInput.focus();
+        }
+    }, 800);
 }
 
-// Service finder form
+// Enhanced Service Finder with Real-time Validation
 document.querySelector('.finder-form form').addEventListener('submit', (e) => {
     e.preventDefault();
     
@@ -185,28 +259,40 @@ document.querySelector('.finder-form form').addEventListener('submit', (e) => {
     const vehicle = document.getElementById('vehicle-info').value;
     
     if (!serviceType) {
-        alert('Please select a service type to get a quote.');
+        showNotification('Please select a service type to get a quote.', 'warning');
         return;
     }
     
-    // Simulate quote generation
-    const quotes = {
-        'logbook': '$199 - $299',
-        'inspection': '$120 - $180',
-        'pink-slip': '$45',
-        'oil-change': '$89 - $149',
-        'brakes': '$149 - $399',
-        'wheel-alignment': '$99 - $149',
-        'engine-tuning': '$199 - $349'
-    };
+    // Simulate quote generation with loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
     
-    const quote = quotes[serviceType] || '$80 - $250';
-    const urgencyText = urgency ? ` (${urgency.replace('-', ' ')})` : '';
+    submitBtn.innerHTML = '<span class="loading"></span> Generating Quote...';
+    submitBtn.disabled = true;
     
-    alert(`Quote for ${serviceType.replace('-', ' ')} service${urgencyText}:\n\nEstimated cost: ${quote}\n\nVehicle: ${vehicle || 'Not specified'}\n\nWould you like to book this service? Click "Book Service" to schedule an appointment.`);
+    // Simulate API call
+    setTimeout(() => {
+        const quotes = {
+            'logbook': '$199 - $299',
+            'inspection': '$120 - $180',
+            'pink-slip': '$45',
+            'oil-change': '$89 - $149',
+            'brakes': '$149 - $399',
+            'wheel-alignment': '$99 - $149',
+            'engine-tuning': '$199 - $349'
+        };
+        
+        const quote = quotes[serviceType] || '$80 - $250';
+        const urgencyText = urgency ? ` (${urgency.replace('-', ' ')})` : '';
+        
+        showNotification(`Quote for ${serviceType.replace('-', ' ')} service${urgencyText}:\n\nEstimated cost: ${quote}\n\nVehicle: ${vehicle || 'Not specified'}`, 'success');
+        
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 1500);
 });
 
-// Booking form submission
+// Enhanced Booking Form with Better UX
 bookingForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
@@ -222,22 +308,28 @@ bookingForm.addEventListener('submit', (e) => {
         message: formData.get('message')
     };
     
-    // Simulate booking submission
+    // Validate required fields
+    if (!data.name || !data.phone || !data.email || !data.service || !data.vehicle || !data.year || !data.preferredDate) {
+        showNotification('Please fill in all required fields.', 'error');
+        return;
+    }
+    
+    // Simulate booking submission with enhanced loading state
     const submitBtn = bookingForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     
-    submitBtn.innerHTML = '<span class="loading"></span> Booking...';
+    submitBtn.innerHTML = '<span class="loading"></span> Processing Booking...';
     submitBtn.disabled = true;
     
     setTimeout(() => {
-        alert(`Thank you ${data.name}!\n\nYour service booking has been received:\n\nService: ${data.service}\nVehicle: ${data.vehicle} ${data.year}\nPreferred Date: ${data.preferredDate}\n\nWe will contact you at ${data.phone} to confirm your appointment.\n\nBooking Reference: BLC${Date.now().toString().slice(-6)}`);
+        showNotification(`Thank you ${data.name}!\n\nYour service booking has been received:\n\nService: ${data.service}\nVehicle: ${data.vehicle} ${data.year}\nPreferred Date: ${data.preferredDate}\n\nWe will contact you at ${data.phone} to confirm your appointment.\n\nBooking Reference: BLC${Date.now().toString().slice(-6)}`, 'success');
         bookingForm.reset();
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
     }, 2000);
 });
 
-// Contact form submission
+// Enhanced Contact Form
 contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
@@ -250,37 +342,47 @@ contactForm.addEventListener('submit', (e) => {
         message: formData.get('message')
     };
     
-    // Simulate form submission
+    // Validate required fields
+    if (!data.name || !data.email || !data.message) {
+        showNotification('Please fill in all required fields.', 'error');
+        return;
+    }
+    
+    // Simulate form submission with enhanced loading state
     const submitBtn = contactForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     
-    submitBtn.innerHTML = '<span class="loading"></span> Sending...';
+    submitBtn.innerHTML = '<span class="loading"></span> Sending Message...';
     submitBtn.disabled = true;
     
     setTimeout(() => {
-        alert(`Thank you ${data.name}!\n\nYour message has been received. We will respond to your ${data.inquiryType || 'inquiry'} within 24 hours.\n\nContact details:\nEmail: ${data.email}\nPhone: ${data.phone || 'Not provided'}`);
+        showNotification(`Thank you ${data.name}!\n\nYour message has been received. We will respond to your ${data.inquiryType || 'inquiry'} within 24 hours.\n\nContact details:\nEmail: ${data.email}\nPhone: ${data.phone || 'Not provided'}`, 'success');
         contactForm.reset();
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
     }, 2000);
 });
 
-// Hero button functionality
+// Enhanced Hero Button Functionality with Smooth Scrolling
 document.querySelectorAll('.hero-buttons .btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
         if (btn.textContent.includes('Book')) {
             document.getElementById('booking').scrollIntoView({
-                behavior: 'smooth'
+                behavior: 'smooth',
+                block: 'start'
             });
         } else if (btn.textContent.includes('Services')) {
             document.getElementById('services').scrollIntoView({
-                behavior: 'smooth'
+                behavior: 'smooth',
+                block: 'start'
             });
         }
     });
 });
 
-// Smooth scrolling for navigation links
+// Enhanced Smooth Scrolling for Navigation Links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -294,7 +396,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Intersection Observer for animations
+// Enhanced Intersection Observer with Multiple Animation Types
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -303,40 +405,119 @@ const observerOptions = {
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('fade-in-up');
+            // Add different animation classes based on element type
+            if (entry.target.classList.contains('service-card')) {
+                entry.target.classList.add('scale-in');
+            } else if (entry.target.classList.contains('feature-card')) {
+                entry.target.classList.add('fade-in-up');
+            } else if (entry.target.classList.contains('section-title')) {
+                entry.target.classList.add('slide-in-left');
+            } else {
+                entry.target.classList.add('fade-in-up');
+            }
         }
     });
 }, observerOptions);
 
-// Initialize page
-document.addEventListener('DOMContentLoaded', () => {
-    populateServices();
-    
-    // Observe elements for animation
-    document.querySelectorAll('.service-card, .feature-card, .section-title').forEach(el => {
-        observer.observe(el);
+// Enhanced Form Input Interactions
+document.querySelectorAll('input, textarea, select').forEach(input => {
+    // Add floating label effect
+    input.addEventListener('focus', () => {
+        input.parentElement.classList.add('focused');
     });
     
-    // Set minimum date for booking to today
-    const dateInput = document.querySelector('input[name="preferred-date"]');
-    if (dateInput) {
-        const today = new Date().toISOString().split('T')[0];
-        dateInput.setAttribute('min', today);
+    input.addEventListener('blur', () => {
+        if (!input.value) {
+            input.parentElement.classList.remove('focused');
+        }
+    });
+    
+    // Add character counter for textareas
+    if (input.tagName === 'TEXTAREA') {
+        const counter = document.createElement('div');
+        counter.className = 'char-counter';
+        counter.style.fontSize = '0.75rem';
+        counter.style.color = '#6b7280';
+        counter.style.textAlign = 'right';
+        counter.style.marginTop = '0.25rem';
+        input.parentElement.appendChild(counter);
+        
+        input.addEventListener('input', () => {
+            const remaining = 500 - input.value.length;
+            counter.textContent = `${remaining} characters remaining`;
+            counter.style.color = remaining < 50 ? '#dc2626' : '#6b7280';
+        });
     }
 });
 
-// Add keyboard navigation support
+// Notification System
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#dc2626' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        z-index: 10000;
+        max-width: 400px;
+        word-wrap: break-word;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    `;
+    
+    notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 5000);
+}
+
+// Enhanced Keyboard Navigation
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         mobileMenu.classList.remove('active');
         navMenu.classList.remove('active');
+        mobileMenu.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+    
+    // Ctrl/Cmd + K for quick search (future feature)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        // Could implement a search modal here
+        showNotification('Search feature coming soon!', 'info');
     }
 });
 
-// Add focus management for accessibility
+// Enhanced Focus Management for Accessibility
 document.querySelectorAll('.btn, .nav-link, input, textarea, select').forEach(element => {
     element.addEventListener('focus', () => {
-        element.style.outline = '2px solid #dc2626';
+        element.style.outline = '2px solid #2563eb';
         element.style.outlineOffset = '2px';
     });
     
@@ -345,7 +526,7 @@ document.querySelectorAll('.btn, .nav-link, input, textarea, select').forEach(el
     });
 });
 
-// Performance optimization: Lazy loading for images
+// Performance Optimization: Lazy Loading for Images
 if ('IntersectionObserver' in window) {
     const imageObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -365,4 +546,53 @@ if ('IntersectionObserver' in window) {
     });
 }
 
-console.log('BLC Autos service website loaded successfully!');
+// Add smooth hover effects for interactive elements
+document.querySelectorAll('.service-card, .feature-card, .booking-feature, .contact-item').forEach(element => {
+    element.addEventListener('mouseenter', () => {
+        element.style.transform = element.style.transform.replace('scale(1.02)', 'scale(1.03)');
+    });
+    
+    element.addEventListener('mouseleave', () => {
+        element.style.transform = element.style.transform.replace('scale(1.03)', 'scale(1.02)');
+    });
+});
+
+// Initialize page with enhanced functionality
+document.addEventListener('DOMContentLoaded', () => {
+    populateServices();
+    
+    // Observe elements for animation
+    document.querySelectorAll('.service-card, .feature-card, .section-title, .booking-feature, .contact-item').forEach(el => {
+        observer.observe(el);
+    });
+    
+    // Set minimum date for booking to today
+    const dateInput = document.querySelector('input[name="preferred-date"]');
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+    }
+    
+    // Add loading animation to page
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+    
+    setTimeout(() => {
+        document.body.style.opacity = '1';
+    }, 100);
+    
+    // Welcome message
+    setTimeout(() => {
+        showNotification('Welcome to BLC Autos! 🚗', 'success');
+    }, 1000);
+});
+
+// Add service worker for offline functionality (future enhancement)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // navigator.serviceWorker.register('/sw.js');
+        console.log('Service Worker support detected');
+    });
+}
+
+console.log('🚗 BLC Autos - Enhanced website loaded successfully!');
