@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLC Autos - Professional Automotive Services Australia</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>BLC Autos</h2>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#services" class="nav-link">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#booking" class="nav-link">Book Service</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Professional Automotive Services</h1>
+            <p class="hero-subtitle">Expert car servicing, repairs, and inspections you can trust. Keeping your vehicle running safely and efficiently.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary">Book Service</button>
+                <button class="btn btn-secondary">View Services</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2032&q=80" alt="Professional Auto Service" />
+        </div>
+    </section>
+
+    <!-- Quick Service Finder -->
+    <section class="service-finder">
+        <div class="container">
+            <div class="finder-form">
+                <h3>What service do you need?</h3>
+                <form class="finder-grid">
+                    <select class="finder-input" id="service-type">
+                        <option value="">Select Service</option>
+                        <option value="logbook">Logbook Service</option>
+                        <option value="inspection">Vehicle Inspection</option>
+                        <option value="pink-slip">Pink Slip</option>
+                        <option value="oil-change">Oil Change</option>
+                        <option value="brakes">Brake Service</option>
+                        <option value="wheel-alignment">Wheel Alignment</option>
+                        <option value="engine-tuning">Engine Tuning</option>
+                    </select>
+                    <select class="finder-input" id="urgency">
+                        <option value="">When needed?</option>
+                        <option value="today">Today</option>
+                        <option value="this-week">This Week</option>
+                        <option value="next-week">Next Week</option>
+                        <option value="flexible">Flexible</option>
+                    </select>
+                    <input type="text" class="finder-input" placeholder="Your Vehicle (e.g., Toyota Camry)" id="vehicle-info">
+                    <button type="submit" class="btn btn-primary">Get Quote</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid" id="services-grid">
+                <!-- Services will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-choose-us">
+        <div class="container">
+            <h2 class="section-title">Why Choose BLC Autos?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>Certified Technicians</h3>
+                    <p>Our qualified mechanics are trained to work on all makes and models with the latest diagnostic equipment.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Quick Turnaround</h3>
+                    <p>We respect your time. Most services completed same day with convenient booking options.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Quality Guarantee</h3>
+                    <p>All our work comes with a comprehensive warranty for your peace of mind.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h3>Competitive Pricing</h3>
+                    <p>Fair, transparent pricing with no hidden costs. Get a quote before any work begins.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="booking-section">
+        <div class="container">
+            <div class="booking-content">
+                <div class="booking-info">
+                    <h2>Book Your Service</h2>
+                    <p>Schedule your vehicle service online or call us directly. We'll take care of everything from inspection to completion.</p>
+                    
+                    <div class="booking-features">
+                        <div class="booking-feature">
+                            <i class="fas fa-calendar-check"></i>
+                            <div>
+                                <h4>Easy Scheduling</h4>
+                                <p>Book online 24/7 or call during business hours</p>
+                            </div>
+                        </div>
+                        <div class="booking-feature">
+                            <i class="fas fa-car"></i>
+                            <div>
+                                <h4>Free Vehicle Check</h4>
+                                <p>Complimentary multi-point inspection with every service</p>
+                            </div>
+                        </div>
+                        <div class="booking-feature">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Service Updates</h4>
+                                <p>We'll keep you informed throughout the service process</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form class="booking-form" id="booking-form">
+                    <h3>Schedule Service</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" name="phone" placeholder="Phone Number" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Email Address" required>
+                        </div>
+                        <div class="form-group">
+                            <select name="service" required>
+                                <option value="">Select Service</option>
+                                <option value="logbook">Logbook Service</option>
+                                <option value="inspection">Vehicle Inspection</option>
+                                <option value="pink-slip">Pink Slip</option>
+                                <option value="oil-change">Oil Change</option>
+                                <option value="brakes">Brake Service</option>
+                                <option value="other">Other Service</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" name="vehicle" placeholder="Vehicle Make & Model" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="year" placeholder="Year" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" name="preferred-date" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" placeholder="Additional details or special requests" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Book Service</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About BLC Autos</h2>
+                    <p>With over 20 years of experience in automotive servicing, BLC Autos has built a reputation for quality workmanship, honest service, and competitive pricing across Australia.</p>
+                    <p>Our team of certified technicians uses the latest diagnostic equipment and genuine parts to ensure your vehicle receives the best possible care. From routine maintenance to complex repairs, we're your trusted automotive service partner.</p>
+                    <div class="stats">
+                        <div class="stat">
+                            <h3>5000+</h3>
+                            <p>Vehicles Serviced</p>
+                        </div>
+                        <div class="stat">
+                            <h3>20+</h3>
+                            <p>Years Experience</p>
+                        </div>
+                        <div class="stat">
+                            <h3>98%</h3>
+                            <p>Customer Satisfaction</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Auto Service Workshop" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Address</h4>
+                            <p>123 Service Street<br>Melbourne, VIC 3000<br>Australia</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>(03) 9123 4567</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>service@blcautos.com.au</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Service Hours</h4>
+                            <p>Mon-Fri: 7:30AM-5:30PM<br>Sat: 8:00AM-4:00PM<br>Sun: Closed</p>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form" id="contact-form">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" name="phone" placeholder="Your Phone">
+                    </div>
+                    <div class="form-group">
+                        <select name="inquiry-type">
+                            <option value="">Inquiry Type</option>
+                            <option value="service">Service Booking</option>
+                            <option value="quote">Quote Request</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="complaint">Complaint</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>BLC Autos</h3>
+                    <p>Your trusted automotive service partner for over 20 years. Quality service, honest pricing, guaranteed results.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-google"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Our Services</h4>
+                    <ul>
+                        <li><a href="#services">Logbook Service</a></li>
+                        <li><a href="#services">Vehicle Inspections</a></li>
+                        <li><a href="#services">Pink Slip</a></li>
+                        <li><a href="#services">Brake Service</a></li>
+                        <li><a href="#services">Engine Tuning</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#booking">Book Service</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> (03) 9123 4567</p>
+                    <p><i class="fas fa-envelope"></i> service@blcautos.com.au</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Melbourne, VIC</p>
+                    <p><i class="fas fa-clock"></i> Mon-Fri: 7:30AM-5:30PM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 BLC Autos. All rights reserved. | ABN: 12 345 678 901</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
